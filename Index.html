@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Orfanato en vivo - HACKED</title>
+    <!-- Fuentes tipo consola/terminal -->
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        :root {
+            --text-color: #f0f0f0;
+            --hacker-red: #ff0000;
+            --hacker-bg: rgba(20, 0, 0, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Courier Prime', monospace;
+            color: var(--text-color);
+            background-color: #050505;
+            overflow-x: hidden;
+            min-height: 200vh; /* Altura extra para permitir el scroll */
+        }
+
+        /* --- FONDO FIJO --- */
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -2;
+        }
+
+        .background-image__img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.1s linear;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000;
+            opacity: 0;
+            z-index: -1;
+            pointer-events: none;
+            transition: opacity 0.1s linear;
+        }
+
+        /* --- SECCIÓN 1: CUENTA REGRESIVA --- */
+        .countdown-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .orphan-countdown {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 3rem;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .orphan-countdown__time {
+            font-family: 'VT323', monospace; /* Fuente estilo reloj digital retro */
+            font-size: 4.5rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .orphan-countdown__date-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 1rem;
+            text-transform: uppercase;
+        }
+
+        /* --- SECCIÓN 2: MENSAJE HACKER (Antes Acertijo) --- */
+        .hack-section {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            margin-top: 10vh; 
+        }
+
+        .hack-message-box {
+            background-color: var(--hacker-bg);
+            border: 2px solid var(--hacker-red);
+            padding: 3rem;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.2);
+            opacity: 0; /* Controlado por JavaScript */
+            transition: opacity 0.1s linear;
+            position: relative;
+        }
+
+        /* Efecto de esquina decorativa estilo tech/militar */
+        .hack-message-box::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px;
+            width: 20px; height: 20px;
+            border-top: 4px solid var(--hacker-red);
+            border-left: 4px solid var(--hacker-red);
+        }
+        .hack-message-box::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; right: -2px;
+            width: 20px; height: 20px;
+            border-bottom: 4px solid var(--hacker-red);
+            border-right: 4px solid var(--hacker-red);
+        }
+
+        .hack-title {
+            color: var(--hacker-red);
+            font-family: 'VT323', monospace;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+
+        .hack-body {
+            color: #fff;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        .hack-data {
+            font-family: 'Courier Prime', monospace;
+            background: #000;
+            color: var(--hacker-red);
+            padding: 1.5rem;
+            border: 1px dashed var(--hacker-red);
+            display: inline-block;
+            width: 100%;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+
+        .hack-data span {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes pulse {
+            0% { text-shadow: 0 0 5px var(--hacker-red); }
+            50% { text-shadow: 0 0 20px var(--hacker-red), 0 0 10px red; }
+            100% { text-shadow: 0 0 5px var(--hacker-red); }
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
+        /* Ajustes Mobile */
+        @media (max-width: 768px) {
+            .orphan-countdown__time { font-size: 2.5rem; }
+            .hack-title { font-size: 2.5rem; }
+            .hack-body { font-size: 1.2rem; }
+            .hack-data { font-size: 0.9rem; word-break: break-all; }
+            .hack-message-box { padding: 1.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Fondo -->
+    <picture class="background-image">
+        <source srcset="https://i.imgur.com/d3mN8gj.jpeg" media="(min-width: 1536px)">
+        <source srcset="https://i.imgur.com/d3mN8gj.jpeg" media="(min-width: 1280px)">
+        <source srcset="https://i.imgur.com/d3mN8gj.jpeg" media="(min-width: 1024px)">
+        <source srcset="https://i.imgur.com/d3mN8gj.jpeg" media="(min-width: 768px)">
+        <source srcset="https://i.imgur.com/d3mN8gj.jpeg" media="(min-width: 640px)">
+        <img src="https://i.imgur.com/d3mN8gj.jpeg" alt="Fondo" aria-hidden="true" class="background-image__img">
+    </picture>
+
+    <div class="background-overlay"></div>
+
+    <main class="countdown-wrapper">
+        <div class="orphan-countdown">
+            <div class="orphan-countdown__panel">
+                <output id="orphan-countdown-display" class="orphan-countdown__time" for="countdown">
+                    00:00:00
+                </output>
+            </div>
+            <div class="orphan-countdown__date-text">
+                04 / 02 / 2026
+            </div>
+        </div>
+    </main>
+
+    <!-- SECCIÓN HACKEO -->
+    <section class="hack-section">
+        <div class="hack-message-box">
+            <h1 class="hack-title">BETA GAME</h1>
+            <p class="hack-body">
+                HA COMENZADO EL HACKEO<br>
+                PREPÁRATE FEDE VIGEVANI
+            </p>
+            <div class="hack-data">
+                <span>> TARGET_IP: 390.891.876</span>
+                <span>> LOCATION: CIUDAD DE MÉXICO</span>
+                <span>> ADDRESS_EXT: 160</span>
+                <span class="blink">> STATUS: EXPOSED_</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* --- SCRIPT CUENTA REGRESIVA --- */
+        (function() {
+            const targetISO = "2026-02-05T00:30:00.000Z";
+            const display = document.getElementById('orphan-countdown-display');
+            
+            if (!display) return;
+
+            const target = new Date(targetISO);
+
+            function pad(n, len) {
+                return String(n).padStart(len, '0');
+            }
+
+            function tick() {
+                const now = Date.now();
+                const diff = Math.max(0, target.getTime() - now);
+
+                if (diff <= 0) {
+                    display.textContent = '00:00:00';
+                    return;
+                }
+
+                const totalSeconds = Math.floor(diff / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                display.textContent = `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}`;
+            }
+
+            tick();
+            setInterval(tick, 1000);
+        })();
+
+        /* --- SCRIPT EFECTOS SCROLL --- */
+        function initScrollTransition() {
+            const backgroundImg = document.querySelector('.background-image__img');
+            const backgroundOverlay = document.querySelector('.background-overlay');
+            const hackBox = document.querySelector('.hack-message-box'); 
+
+            if (!backgroundImg || !backgroundOverlay || !hackBox) return;
+
+            function updateScrollEffects() {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const hackSection = document.querySelector('.hack-section');
+                if (!hackSection) return;
+
+                const sectionRect = hackSection.getBoundingClientRect();
+                const sectionTop = sectionRect.top + scrollY;
+                
+                const transitionStart = Math.max(0, sectionTop - windowHeight * 1.5);
+                const transitionEnd = sectionTop;
+                const transitionRange = transitionEnd - transitionStart;
+
+                let scrollProgress = 0;
+                if (transitionRange > 0) {
+                    scrollProgress = Math.max(0, Math.min(1, (scrollY - transitionStart) / transitionRange));
+                } else if (scrollY >= sectionTop) {
+                    scrollProgress = 1;
+                }
+
+                const isSectionInView = sectionRect.top < windowHeight && sectionRect.bottom > 0;
+
+                // 1. Blur del fondo
+                const blurAmount = scrollProgress * 20;
+                backgroundImg.style.filter = `blur(${blurAmount}px)`;
+
+                // 2. Overlay oscuro
+                backgroundOverlay.style.opacity = String(scrollProgress);
+
+                // 3. Opacidad del cuadro de mensaje
+                const fadeStart = 0.3;
+                const fadeEnd = 0.8;
+                let boxOpacity = 1;
+
+                if (!isSectionInView && scrollProgress > 0 && scrollProgress < fadeEnd) {
+                    if (scrollProgress <= fadeStart) {
+                        boxOpacity = 0;
+                    } else {
+                        boxOpacity = (scrollProgress - fadeStart) / (fadeEnd - fadeStart);
+                    }
+                }
+                if (isSectionInView || scrollProgress >= fadeEnd) {
+                    boxOpacity = 1;
+                }
+
+                // Aplicar opacidad al elemento correcto
+                hackBox.style.opacity = String(boxOpacity);
+            }
+
+            let ticking = false;
+            function onScroll() {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        updateScrollEffects();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            updateScrollEffects();
+
+            // Fallback Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const box = entry.target.querySelector('.hack-message-box');
+                        if (box) box.style.opacity = '1';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            const sectionObserverTarget = document.querySelector('.hack-section');
+            if (sectionObserverTarget) {
+                observer.observe(sectionObserverTarget);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScrollTransition);
+        } else {
+            initScrollTransition();
+        }
+    </script>
+</body>
+</html>
+
+
